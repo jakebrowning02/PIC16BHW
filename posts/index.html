@@ -59,22 +59,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../">
-<script src="../../site_libs/quarto-html/quarto.js"></script>
-<script src="../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -102,9 +102,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
-<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-fixed fullcontent">
@@ -114,7 +117,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../../index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">16bhwblog</span>
     </a>
   </div>
@@ -125,7 +128,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../../about.html"> 
+    <a class="nav-link" href="../about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item compact">
@@ -221,7 +224,7 @@ cd TMDB_scraper</code></pre>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        <span class="co">#sends spider to the full credit page</span></span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        </span>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">yield</span> scrapy.Request(url<span class="op">=</span>full_credits_url, callback<span class="op">=</span><span class="va">self</span>.parse_full_credits)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Now that we have made it onto the full cast and credits page, we will work with the parse_full_credits(self, response) function that was called as we navigated to this page. The goal of this function is to find all the actors who played a role in the movie and send our spider to their individual pages to be parsed by our final function parse_actor_page(). Last time we were able to navigate to the cast page by simply adding ‘/cast’, however as each actor has their own distinct name and page, we will not be able to hardcode the new URL. In fact if you click on the first actor or actress in the list, in my case Daniel Radcliffe, we see that the URL for their individual page contains a seemingly arbitrary number followed by their name. In order to find the extension for each actor, let us navigate back to the full cast and credits page. By right clicking on the top actor or actress’s name, followed by clicking inspect, we can see where their name is stored in the HTML file. More importantly, just before where their name is stored in text, we see something similar to ‘ <a href="../../person/10980-daniel-radcliffe">Daniel Radcliffe</a>’. Should we navigate back to Mr.&nbsp;Radcliffe’s page, we can see that the the element defined as ‘href’ is the same as the URL extension for the page, after the ‘https://www.themoviedb.org/’ that all pages on the TMDB site begin with. Clearly this is critical information as it will allow us to navigate to the actor or actress’s page using their URL extension. Now, we simply need to find a way to access this information for all of the actors. As we go back to the cast and credits page and look at the line where the first name was stored, we can traverse backwards to the line starting with “&lt;li data-order=”0” data-credit-id=” and then up again to the line reading ‘&lt;ol class = “people credits”&gt;’. It is important to note the information of all the cast members, including their names and the ‘href’ URL extensions we are trying to extract are all located under this ol class. We want to access this class from the HTML file in order to use it in our function, which we will be able to accomplish using css selectors. By taking a look at the first line of code, we can see that in the selector, we start in the overarching ol class, before specifying to travel down through the li class and finally asking for the attribute ‘href’ located within a. One thing to note about this line is the ‘:not(.crew)’ following the ol class. This effectively tells the program that all we do not want the attributes of any of the crew members, but only the attributes of the actors. Additionally, the .extract() command at the end of the line effectively gathers the information from the location we specified in the selector, allowing us to assign it to our variable actor_selectors. This command returns a list of the URL extensions for every actor in the movie and stores it in the actor_selectors variable. Now that we have the URL extensions, we can finish this function in a similar manner to the initial parse() function by creating new URLs for the spider to follow. As we observed before, every actor page starts with ‘https://www.themoviedb.org/’, and is followed by a tail unique to each actor which we have stored in the actor_selectors list. Now, to send our spider to each actor page, we simply write a for loop that iterates through all of the actor extensions in our actor_selectors list, add the extension to the generic URL started mentioned above, and again send the spider to the new page addressed by our new URL saved as actor_page_url. Our yield scrapy.Request() is slightly different than the one we used in the previous function as instead of calling parse_full_credits(), we are going to call parse_actor_page() as the spider is now traveling to an individual actor page.</p>
+<p>Now that we have made it onto the full cast and credits page, we will work with the parse_full_credits(self, response) function that was called as we navigated to this page. The goal of this function is to find all the actors who played a role in the movie and send our spider to their individual pages to be parsed by our final function parse_actor_page(). Last time we were able to navigate to the cast page by simply adding ‘/cast’, however as each actor has their own distinct name and page, we will not be able to hardcode the new URL. In fact if you click on the first actor or actress in the list, in my case Daniel Radcliffe, we see that the URL for their individual page contains a seemingly arbitrary number followed by their name. In order to find the extension for each actor, let us navigate back to the full cast and credits page. By right clicking on the top actor or actress’s name, followed by clicking inspect, we can see where their name is stored in the HTML file. More importantly, just before where their name is stored in text, we see something similar to ‘ <a href="../person/10980-daniel-radcliffe">Daniel Radcliffe</a>’. Should we navigate back to Mr.&nbsp;Radcliffe’s page, we can see that the the element defined as ‘href’ is the same as the URL extension for the page, after the ‘https://www.themoviedb.org/’ that all pages on the TMDB site begin with. Clearly this is critical information as it will allow us to navigate to the actor or actress’s page using their URL extension. Now, we simply need to find a way to access this information for all of the actors. As we go back to the cast and credits page and look at the line where the first name was stored, we can traverse backwards to the line starting with “&lt;li data-order=”0” data-credit-id=” and then up again to the line reading ‘&lt;ol class = “people credits”&gt;’. It is important to note the information of all the cast members, including their names and the ‘href’ URL extensions we are trying to extract are all located under this ol class. We want to access this class from the HTML file in order to use it in our function, which we will be able to accomplish using css selectors. By taking a look at the first line of code, we can see that in the selector, we start in the overarching ol class, before specifying to travel down through the li class and finally asking for the attribute ‘href’ located within a. One thing to note about this line is the ‘:not(.crew)’ following the ol class. This effectively tells the program that all we do not want the attributes of any of the crew members, but only the attributes of the actors. Additionally, the .extract() command at the end of the line effectively gathers the information from the location we specified in the selector, allowing us to assign it to our variable actor_selectors. This command returns a list of the URL extensions for every actor in the movie and stores it in the actor_selectors variable. Now that we have the URL extensions, we can finish this function in a similar manner to the initial parse() function by creating new URLs for the spider to follow. As we observed before, every actor page starts with ‘https://www.themoviedb.org/’, and is followed by a tail unique to each actor which we have stored in the actor_selectors list. Now, to send our spider to each actor page, we simply write a for loop that iterates through all of the actor extensions in our actor_selectors list, add the extension to the generic URL started mentioned above, and again send the spider to the new page addressed by our new URL saved as actor_page_url. Our yield scrapy.Request() is slightly different than the one we used in the previous function as instead of calling parse_full_credits(), we are going to call parse_actor_page() as the spider is now traveling to an individual actor page.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a> <span class="kw">def</span> parse_full_credits(<span class="va">self</span>, response):</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a> </span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        <span class="co">'''</span></span>
@@ -282,6 +285,147 @@ We have now reached our third and final parsing function, parse_actor_page(self,
 <p>Now that we have finished writing our spider, we are ready to run it in order to scrape our desired data off of the TMDB website. The first thing we need to do is go back into the settings.py file and comment out the page count limit we implemented just before creating our spider to allow our spider to scrape all of the pages it is sent to. We can now go back to the terminal and run the following command:</p>
 <pre><code>scrapy crawl tmdb_spider -o results.csv -a subdir=671-harry-potter-and-the-philosopher-s-stone</code></pre>
 <p>Note that the command is all one on the same line. This command will tell our spider to crawl on the website for the first Harry Potter movie as given by the subdirectory, and will write all of the results in a file named ‘results.csv’. If we go back into the project folder, we can open the file we just created and we will see dictionaries represented by a table with one column containing the actor names and the other column containing the titles of the movies that respective actor appeared in. This is where we will access the results our spider was able to produce. We can now use this data to create our recommendations.</p>
+<div id="f5601579-e187-4b0b-b28e-0052cdabb081" class="cell" data-execution_count="52">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="0537f409-5ed3-4e8b-92dc-60b2943e4488" class="cell" data-tags="[]" data-execution_count="53">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#checking directory</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>notebook_path <span class="op">=</span> os.getcwd()</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(notebook_path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>/Users/jakebrowning</code></pre>
+</div>
+</div>
+<div id="f67e7ac4-4531-4c10-b0d2-e5e5b1825923" class="cell" data-tags="[]" data-execution_count="54">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#reading in the data we scraped using our spider</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'/Users/jakebrowning/Desktop/PIC16B/TMDB_scraper/results.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="68fb88cb-811f-4af1-8bfc-4e0401caea59" class="cell" data-tags="[]" data-execution_count="55">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#using for loop to create a counting function for how many actors are in each movie</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>movDict <span class="op">=</span> {}</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> el <span class="kw">in</span> df1:</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> el <span class="kw">in</span> movDict.keys():</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>        movDict[el] <span class="op">=</span> movDict[el]<span class="op">+</span><span class="dv">1</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>        movDict[el] <span class="op">=</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="e3a6324e-968c-426c-a82f-73a4577aa45d" class="cell" data-tags="[]" data-execution_count="56">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#adjusting my dictionaries for the pandas dataframe</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>sortedMovDict <span class="op">=</span> <span class="bu">sorted</span>(movDict.items(), key<span class="op">=</span><span class="kw">lambda</span> x:x[<span class="dv">1</span>], reverse<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>convertedMovDict <span class="op">=</span> <span class="bu">dict</span>(sortedMovDict)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="aff10e1a-18b1-4f45-b13b-334e9c1d7f22" class="cell" data-execution_count="57">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#putting the counted dictionary into a pandas dataframe and displaying the dataframe</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>dfList <span class="op">=</span> pd.DataFrame(<span class="bu">list</span>(convertedMovDict.items()),columns<span class="op">=</span>[<span class="st">'Movie Name'</span>,<span class="st">'Number of Shared Actors'</span>])</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>dfList</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="57">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Movie Name</th>
+<th data-quarto-table-cell-role="th">Number of Shared Actors</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Harry Potter and the Philosopher's Stone</td>
+<td>63</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Harry Potter and the Chamber of Secrets</td>
+<td>37</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Creating the World of Harry Potter</td>
+<td>36</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Harry Potter and the Prisoner of Azkaban</td>
+<td>26</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Harry Potter and the Order of the Phoenix</td>
+<td>24</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2269</td>
+<td>Queen Kong</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2270</td>
+<td>Frankenstein: The True Story</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2271</td>
+<td>The Darwin Adventure</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2272</td>
+<td>The Canterbury Tales</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2273</td>
+<td>The Sooty Show</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+<p>2274 rows × 2 columns</p>
+</div>
+</div>
+</div>
+<div id="e931f163-520b-48f1-ac5b-4dcbc47c35b9" class="cell" data-tags="[]" data-execution_count="58">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#creating lists of the top twenty movies and their numbert of actors</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>movN <span class="op">=</span> []</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>numAct <span class="op">=</span> []</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>i<span class="op">=</span><span class="dv">0</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> i <span class="op">&lt;</span> <span class="dv">20</span>:</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    movN.append(dfList[<span class="st">'Movie Name'</span>][i])</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    numAct.append(dfList[<span class="st">'Number of Shared Actors'</span>][i])</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    i <span class="op">=</span> <span class="dv">1</span><span class="op">+</span>i</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="b511ac2f-a306-4caa-9187-fe2499eb94bb" class="cell" data-tags="[]" data-execution_count="59">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#changing order of list to be better displayed in the graph</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>movN.reverse()</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>numAct.reverse()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="8703ccff-41df-4681-99ee-b4f0407d7a87" class="cell" data-tags="[]" data-execution_count="60">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#creating bar chart with top twenty movie recommendations, displaying how many shared actors in each movie</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>myChart <span class="op">=</span> plt.barh(movN, numAct)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>plt.bar_label(myChart, labels<span class="op">=</span>numAct, label_type<span class="op">=</span><span class="st">"edge"</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Top Twenty Movie Recommendations'</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Number of Shared Actors'</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Movie Title'</span>)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-10-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
 
 
 
