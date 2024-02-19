@@ -282,6 +282,34 @@ We have now reached our third and final parsing function, parse_actor_page(self,
 <p>Now that we have finished writing our spider, we are ready to run it in order to scrape our desired data off of the TMDB website. The first thing we need to do is go back into the settings.py file and comment out the page count limit we implemented just before creating our spider to allow our spider to scrape all of the pages it is sent to. We can now go back to the terminal and run the following command:</p>
 <pre><code>scrapy crawl tmdb_spider -o results.csv -a subdir=671-harry-potter-and-the-philosopher-s-stone</code></pre>
 <p>Note that the command is all one on the same line. This command will tell our spider to crawl on the website for the first Harry Potter movie as given by the subdirectory, and will write all of the results in a file named ‘results.csv’. If we go back into the project folder, we can open the file we just created and we will see dictionaries represented by a table with one column containing the actor names and the other column containing the titles of the movies that respective actor appeared in. This is where we will access the results our spider was able to produce. We can now use this data to create our recommendations.</p>
+<p>Our first step in creating our recommendations is importing our necessary packages and reading in the data we just acquired and saved into results.csv, which can be done via the following code:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#reading in the data we scraped using our spider</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'/Users/jakebrowning/Desktop/PIC16B/TMDB_scraper/results.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#using for loop to create a counting function for how many actors are in each movie</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>movDict <span class="op">=</span> {}</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> el <span class="kw">in</span> df1:</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> el <span class="kw">in</span> movDict.keys():</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>        movDict[el] <span class="op">=</span> movDict[el]<span class="op">+</span><span class="dv">1</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        movDict[el] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#adjusting my dictionaries for the pandas dataframe</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>sortedMovDict <span class="op">=</span> <span class="bu">sorted</span>(movDict.items(), key<span class="op">=</span><span class="kw">lambda</span> x:x[<span class="dv">1</span>], reverse<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>convertedMovDict <span class="op">=</span> <span class="bu">dict</span>(sortedMovDict)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">#putting the counted dictionary into a pandas dataframe and displaying the dataframe</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>dfList <span class="op">=</span> pd.DataFrame(<span class="bu">list</span>(convertedMovDict.items()),columns<span class="op">=</span>[<span class="st">'Movie Name'</span>,<span class="st">'Number of Shared Actors'</span>])</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>dfList</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We can see this yields a list of movies containing shared actors, ordered from most shared actors to least shared actors with our original movie.</p>
+<p><img src="hwscrapershot2.jpg" class="img-fluid"></p>
+<p>```python #creating lists of the top twenty movies and their numbert of actors movN = [] numAct = [] i=0 while i &lt; 20: movN.append(dfList[‘Movie Name’][i]) numAct.append(dfList[‘Number of Shared Actors’][i]) i = 1+i</p>
+<p>#changing order of list to be better displayed in the graph movN.reverse() numAct.reverse()</p>
+<p>#creating bar chart with top twenty movie recommendations, displaying how many shared actors in each movie myChart = plt.barh(movN, numAct) plt.bar_label(myChart, labels=numAct, label_type=“edge”) plt.title(‘Top Twenty Movie Recommendations’) plt.xlabel(‘Number of Shared Actors’) plt.ylabel(‘Movie Title’) plt.show() ’’’</p>
+<p>This leaves us with our top twenty reccommendations, shown in decreasing order by the bar chart displayed below.</p>
+<p><img src="scraperhwshot1.jpg" class="img-fluid"></p>
 
 
 
