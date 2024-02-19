@@ -305,9 +305,26 @@ We have now reached our third and final parsing function, parse_actor_page(self,
 <span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>dfList</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>We can see this yields a list of movies containing shared actors, ordered from most shared actors to least shared actors with our original movie.</p>
 <p><img src="hwscrapershot2.jpg" class="img-fluid"></p>
-<p>```python #creating lists of the top twenty movies and their numbert of actors movN = [] numAct = [] i=0 while i &lt; 20: movN.append(dfList[‘Movie Name’][i]) numAct.append(dfList[‘Number of Shared Actors’][i]) i = 1+i</p>
-<p>#changing order of list to be better displayed in the graph movN.reverse() numAct.reverse()</p>
-<p>#creating bar chart with top twenty movie recommendations, displaying how many shared actors in each movie myChart = plt.barh(movN, numAct) plt.bar_label(myChart, labels=numAct, label_type=“edge”) plt.title(‘Top Twenty Movie Recommendations’) plt.xlabel(‘Number of Shared Actors’) plt.ylabel(‘Movie Title’) plt.show() ’’’</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#creating lists of the top twenty movies and their numbert of actors</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>movN <span class="op">=</span> []</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>numAct <span class="op">=</span> []</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>i<span class="op">=</span><span class="dv">0</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> i <span class="op">&lt;</span> <span class="dv">20</span>:</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    movN.append(dfList[<span class="st">'Movie Name'</span>][i])</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    numAct.append(dfList[<span class="st">'Number of Shared Actors'</span>][i])</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    i <span class="op">=</span> <span class="dv">1</span><span class="op">+</span>i</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">#changing order of list to be better displayed in the graph</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>movN.reverse()</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>numAct.reverse()</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co">#creating bar chart with top twenty movie recommendations, displaying how many shared actors in each movie</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>myChart <span class="op">=</span> plt.barh(movN, numAct)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>plt.bar_label(myChart, labels<span class="op">=</span>numAct, label_type<span class="op">=</span><span class="st">"edge"</span>)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Top Twenty Movie Recommendations'</span>)</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Number of Shared Actors'</span>)</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Movie Title'</span>)</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This leaves us with our top twenty reccommendations, shown in decreasing order by the bar chart displayed below.</p>
 <p><img src="scraperhwshot1.jpg" class="img-fluid"></p>
 
