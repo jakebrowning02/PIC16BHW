@@ -199,13 +199,13 @@ cd TMDB_scraper</code></pre>
 <p>USER_AGENT = ‘Mozilla/5.0 (iPad; CPU OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148’</p>
 <p>This line helps to minimize the chance that the website identifies your spider as a bot and tries to block the web scraping process. Finally, it is time to begin writing our spider. Inside of our project folder, navigate into the spiders directory and create a new file titled ‘tmdb_spider.py’, and add the following chunk of code to the file:</p>
 <p>import scrapy</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TmdbSpider(scrapy.Spider):</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    name <span class="op">=</span> <span class="st">'tmdb_spider'</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, subdir<span class="op">=</span><span class="va">None</span>, <span class="op">*</span>args, <span class="op">**</span>kwargs):</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.start_urls <span class="op">=</span> [<span class="ss">f"https://www.themoviedb.org/movie/</span><span class="sc">{</span>subdir<span class="sc">}</span><span class="ss">/"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>class TmdbSpider(scrapy.Spider):
+
+    name = 'tmdb_spider'
+    
+    def __init__(self, subdir=None, *args, **kwargs):
+    
+        self.start_urls = [f"https://www.themoviedb.org/movie/{subdir}/"]</code></pre>
 <p>This code chunk will allow us to run the spider for our movie of choice from the terminal by giving the subdirectory on the TMDB website as our extra argument. Now that we have a working spider, it is time to implement our three parsing methods: parse(self, response), parse_full_credits(self, response), and parse_actor_page(self, response).</p>
 <p>Let’s start with the parse(self, response) function. The role of this function is to navigate from our main movie page to the ‘Full Cast and Crew’ page. If we go back to our main movie page, and navigate to the ‘Full Cast and Crew’ page, we can see that the only change in our URL is there is now a ‘/cast’ at the end. That tells us, all we need to do to get to our cast page is to add ‘/cast’ to the end of our current URL, and send our spider to the page found by our new URL. As we can see in the function below, we define our new URL to be called ‘full_credits_url’ which is created by taking ‘response.url’, the URL of the page we’re on, and adding the string ‘/cast’ to the end. As we now have the URL for the page we want to navigate to, we yield a scrapy.Request to send our spider to the cast page, passing our new ‘full_credits_url’ as the URL parameter, and setting the callback to the parse_full_credits() function as we will now navigate to the full credits page.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> parse(<span class="va">self</span>, response):</span>
