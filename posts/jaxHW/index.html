@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.541">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jake Browning">
+<meta name="dcterms.date" content="2024-02-21">
+
+<title>16bhwblog - Homework 4: Heat diffusion with Jax</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">16bhwblog</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Homework 4: Heat diffusion with Jax</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">news</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Jake Browning </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">February 21, 2024</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>Comparison of methods:</p>
+<pre><code>When looking at the four methods that we have implemented, it is clear that the advance_time_matvecmul() method is by far the slowest at 1 minute and 34 seconds per loop while our final method, advance_time_jax() is the fastest at a mere 278 ms per loop.. The method advance_time_numpy() and advance_time_jax() may seem relatively similar in  speeds as there is less than a second separating their time to progress 2700 time steps, however in reality the jax method is a little less than twice as fast as the numpy method, at times of 278 ms and 363 ms respectively. That being said, they are both significantly faster than the sparse_advance_time_matvecmul() method at 1.12 seconds per loop \, which itself is more than ten times faster than the advance_time_matvecmul() which, as stated before, took approximately 1 minute and 34 seconds to advance our model through 2700 timesteps. 
+
+When it comes to writing the functions, taking into account that I did not write the first method, I found the get_sparse_A() method the easiest to write, as I was simply building on the get_A() method I had previously written, and then writing one line to set my return value to a sparse matrix corresponding to the matrix returned by the get_A() function. Similarly, the get_A() function was relatively straightforward to write as I simply had to create a matrix and then edit three of the diagonals. I initially had some trouble when writing the advance_time_numpy() function as I was unsure of how to implement the boundary conditions that were to allow heat to escape from the model. Before successfuly completing the boundary condition, my results yielded in a heat map that began to take on an almost plus like shape as the heat began to reach the edges and simply wrap around to the other side. I solved this probliem by creating a matrix of dimensions (N+2)x(N+2), which allowed the heat to go to an outer ring, that was effectively deleted before returning the function, simulating the idea that the heat escaped outside of our model. Similar to the get_A_sparse() function, after writing the advance_time_numpy() function the advance_time_jax() function was relatively easy to implement. Conceptually it follows the same pattern as the numpy function, with the only catches being that jax does not allow for index assingment. To get around this, I found a function .at(), helping me to navigate around the matrices, and more importantly, I created new matrices at each step, meaning I was not altering any pre-existing matrices, but rather creating new ones which is allowed by jax. </code></pre>
+<p>Blog post:</p>
+<pre><code>Today we will create a simulation of two-dimensional heat diffusion using packages such as jax and numpy. Let us start by creating two jupyter notebooks, one titled heat_equation.ipynb, and the other jax_heat_map.ipynb. We will store our important methods in heat_equation.ipynb, while jax_heat_map.ipynb will be used to test them as we import them in.
+
+Starting in heat_equation.ipynb, let us start by importing the packages we plan on using in this project: jax, numpy, sparse from jax.experimental, jit from jax, and jax.numpy. I chose to import numpy as np and jax numpy as jnp to make them easier to use as we will be using them a fair amount. We are now ready to begin implementing our first method advance_time_matvecmul(). For this function we will take in three arguments, A, u, and epsilon. It is important to familiarize ourselves with what these variables represent in the model as they will be used pervasively throughout the process. The value A represents the transition matrix to be used. The variable u represents an N x N matrix that the current state of our heat map. We will find soon that initially u, at time zero called u0, is a simple point in the middle of the matrix. In order to update to the next timestep, we will use A, which is a numpy array of size N^2 x N^2. By finding the product of A and u, we find what kind of change is to seen when moving to the next timestep. Finally, epsilon tells us the magnitude of that change. Therefore, the change we see between timesteps is given by the epsilon(Au). Finally, to get to the next timestep, we simply add the change to our current state, u, to the change we just found, setting this all equal to a new u to get to our next time step. 
+
+Now that we understand the math behind what we are trying to simulate, we can get back to our advance_time_matvecmul() function in heat_equation.ipynb, which is passed in the three parameters u, A, and epsilon. The purpose of this function is to simply advance us one timestep in the simulation, returning the value u representing the new heat map. Luckily, we know how to do that given our discussion in the previous paragraph. By simply using the equation we found, we can set u equal to u + epsilon(Au), however there are some technicalities that we need to deal with. Firstly, we need to use the u.flatten() function when finding the product of A and u as otherwise we will encounter an error due to differences in dimensions between A and u. When flattened, u becomes a one dimensionl array of size N^2, allowing for the product to be calculated by multiplying by an N^2 x N^2 matrix, namely A. Unfortunately, to return a reasonable u, we need a matrix that is of the dimensions N x N, similar to the u we were passed in. To get our flattened product of A and u back into the form of an N x N matrix we can use the .reshape(A,B) function which will revert the product back into an A X B matrix. It seems that we could simply replace A and B in this function with N and N as we know those are the dimensions of our desired matrix, however we must be careful here as there was no value N passed into this function. While a global N may have been declared, it is safer to use the shape of u passed in to calculate our dimensions. To find these dimensions, we use the .shape attribute of u, calling u.shape[0] to find the dimension of the first axis, which corresponds to the N that the passed in u is utilizing. You may notice that I used u.shape[0] for both parameters, yielding reshape((u.shape[0],u.shape[0])) instead of using the u.shape[1] for the second parameter. This works only because we know that u is square, and therefore u.shape[0] and u.shape[1] will yield the same value. Therefore, there is no harm using the first index for the second parameter, however I simply chose to use the zeroth index for both. We have now successfuly implemented the Au part of our equation into the function, and the next part is quite simple. As epsilon is simply a scalar, we can directly multiply the matrix that we just found by epsilon, yielding the epsilon(Au) part of the equation that we said represented the total change going from one timestep to the next. To get the actual new u for the new timestep, we can add it all to the initial u we received to get our new u. Note that we are only able to add these two values together becasue they are matrices of the same dimensions. Finally, we can set this whole value equal to our return value, which I also named u, and return this value.
+
+First function is officially finished! Now looking at the parameters, we can see that epsilon will be easy to find as it is just a scalar value, u will be a bit trickier, but in the beginning it is mostly zeros, making it easier to define. On the other hand, A is a little bit trickier to create. The good news is that A does not change throughout our computations, so we just need to define it once before we start computations. We know that A is a matrix of size N^2 x N^2, so we can start by defining a value n to be N^2 as this will be useful for the coming commands. </code></pre>
+<p>FINSIH EXPLAINING GET A FUNCTION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</p>
+<pre><code>We are now ready to check if the functions we just wrote are functioning properly! Let us go to the other file we created, jax_heat_map.ipynb, and do some set up with some more imports. For this file I imported all of the files we imported for the heat_equation.ipynb as well as importing time and pyplot from matplotlib as plt. The time package will be used to test how efficient our functions are, while the pyplot package will be used to visualize our data to ensure that we are achieving reasonable results. Next we want to ensure that we can use the function we wrote in our other file, so we can run the command %run heat_equation.ipynb. This will run the file we wrote first, allowing this new file to access all of the functions defined in the previous file heat_equations.ipynb. Next, we can decide on the values of the parameters we will use for our model. I set my epsilon to 0.2 and my N to 101 for a reasonable estimation of diffusion. Next, let us get a matrix A we can use by calling our function get_A() while passing the variable N as an argument. Finally before testing, we will create an empty list called listShow. This list is where we will store some of the information at certain time steps to get a peek into how our function is performing. Now, before we call our function, we must define an initial u0 as our starting point for our heat. A good starting point is putting one unit of heat at the midpoint. To accomplish this, we first define u to be an NxN matrix full of zeros using the command np.zeros((N,N)). To find the middle, we simply use the index u0[int(N/2),int(N/2)] and set it equal to 1.0. If we want see how it looks, we can run the command plt.imshow(u0) and you should see a dark grid with one small, bright square in the middle. Now that we have defined all of our parameters, we are ready to start. Running the function just once will produce very minimal changes in our grid, so it is advantageous to run the model many times and check in on the results at regularly scheduled intervals. This sounds like the perfect place to implement a for loop. Let us run a variable, call it i, in range from (1, 2701), setting u0 equal to the function call of advance_time_matvecmul(A,u0,epsilon). This will run to timestep 2700, yielding enough time to see significant results. However we mentioned that we wanted to be able to check in on the progress at regularly schefuled intervals, say every 300 timesteps. To implement this, within the for loop we can write an if statement checking if i%300==0, which would imply that i is a multple of 300. Then, within the if statemend we can append both u0 and i in a list to the empty list we created just before writing this loop, listShow. I also like to pring out i every time it hits a multiple of 300, to make it easier to keep track of the progress of the loop. We can now run our first iteration of our model, however note that this code block will take a long time to run. For my machine it took about a minute and a half to run. If you desire, you can time how long it takes on yours by inserting the command %%time it -r 1 -n 1 at the top of the block. This will print out how long the block of code took to run when the block is done running. While your code is running, you should be able to see a new multiple of 300 be printed out every once in a while as the variable i iterates past that value in the loop, which is a good way to keep track of the progress through the loop. 
+
+Our loop has finally finished running! The only issue is we do not see any results outside of the increments of 300 printed out to the screen and the excruciatingly long time it took to run that block of code. Therefore, our next step is to visualize the steps our model just underwent. We remember that we stored the status of u0 at each increment of 300 in listShow. Doing some quick math we can calculate that we have nine total updates stored in this list, which we will use pyplot to display in a nice fashion. As we have nine instances, it seems reasonable to present them in a 3 x 3 grid, so let us set a variable rows and columns both equal to three. Next we are going to define a variable that will not be used until a bit later, call it img_count and set it equal to zero. We are now ready to define our display figure using pyplot by calling plt.sublots(nrows=rows, ncols=cols, figsize=(15,15)). The parameters we are passing into this function are relatively self explanatory, nrows refers to the number of rows desired, ncols refers to the number of columns desired, and figsize is how large we want the figure to be. We can set this equal to fig, axes as these will be the variables we access when plugging our information into the new grid. Finally, we can run a nested for loop to access each element of our new 3 x 3 grid. While running i in range of rows and within that j in range of columns, we call axes[i,j].imshow(listShow1[img_count][0]). This displays the image created by our stored u value in listShow in the axes indexed at [i,j]. We can see that img_count makes its long awaited appearance here, as it serves as our iterator through the list, meaning it is critical to increment it by one next to ensure that we do not print the same picture in each portion of the grid. You should see an output of a 3 x 3 grid, and in each slot there is a dark square, with a circle of light in the middle, growing bigger each time as we go from top left to bottom right. Conceptually, this makes sense as the light represents the heat diffusing throughout the square area as time passes. If you see a similar result, then we know that our first two functions are working as intended.
+
+Now that our first two functions are up and running, we can start working on our next function, get_sparse_A(). The purpose of this function is simply to take in a dimension N and return the sparse version the A matrix corresponding to the N. Luckily, we have already done half of the work in our previous function get_A(), which we can call directly while passing it the parameter N. This will create the A matrix that we intend to convert into a sparse matrix. The jax package holds an experimental sparse matrix support that we will be using for this purpose. The exact format we will use is called the batch coordinate (BCOO) format, which will allow use to use less space to store this matrix, which will in turn drastically decrease the time required for the matrix multiplication. In order to convert this A matrix into its sparse form, we run the command sparse.BCOO.fromdense(A). We call sparse as it is part of the sparse package, BCOO is the format in which we wish to convert the matrix to, and fromdense signifies that we wish to go from a normal or 'dense' matrix, to a sparse matrix. Now we assign that to our return value A_sp_matrix, and return that value, completing the purpose of this function.
+
+We now want to double check that this function is running properly, so we will traverse back to jax_heat_map.ipynb to run a similar chunk of code that we ran previously, with a few key differences. First, instead of passing A to our advance_time_matvecmul() function, we want to ensure it is able to handle a sparse matrix in the hopes that it will decrease the time needed for computations. In order to get such a sparse matrix, we call our new function get_sparse_A(), while passing N as an argument. I set this equal to a variable named sp_A so that I knew this was the sparse verion of my A matrix. Then, I initialized a new list called listShow1, setting it equal to an empty list. Next, we want to do the same process we did to check our first two functions, except this time we will pass in sp_A to advance_time_matvecmul() as well as applying the jit function to it. The jit function will use the jax just in time compilation feature which will drastically improve the performance of the function. When running this code block, we can see how much this improves the speed, taking the block around a second to finish as opposed to over a minute for the previous attempt. Again using a similar process to up above, we will display our data in the exact same way, except we will be getting our display information from listShow1 instead of listShow. Our output should be similar to the output we got previously. 
+
+We are now prepared to implement another method, providing us with an alternate way to run our model without using matrix multiplication. Instead, we will use vectorized array operations to progress our model, made possible by the numpy passage. We have the equation that the update discrete update time is 
+INSERT UPDATE DISCRETE TIME EQUATION U'S AND K'S WITH EPSILON</code></pre>
+<p>Therefore we need to find a way to update each point so as to abide by this equation. For me it helped to visualize it in two separate updates, a vertical and horizontal one. Looking at the horizontal changes, we see that for each value in the matrix at time t+1, is created in part by adding the elements directly to the left and right from the matrix at time t. As you may be considering already, we run into an issue with the values at the borders in which there is no value to either the right or the left. To deal with this, we will create array of zeroes of size (N+2)x(N+2), and place our current grid state at time u into the middle of the matrix. This will give us a bit of leeway in our computations as these outer values will not affect the inner values as they are zeroes and it does not matter computationally what happens to them does not matter as we will get rid of them before returning our updated grid state u_new. Starting from the beginning, we have to get what value to use for N as we are only passed in u and epsilon. To do this we will again extract N using the shape of the grid state u passed into the function, accomplished by setting m,N to u.shape. Now that we have acquired our value for N, we can define our (N+2)x(N+2) matrix full of zeroes by again using the function np.zeroes((N+2,N+2)). To set the middle to be equal to u, we use indexing and set the middle region, indexed by [1:-1,1:-1], equal to the grid state u. Now that we have our matrix u with a surrounding padding of zeroes, we can begin our calculations. We first will find our changes in the x-direction using the update equation stated earlier and numpy’s .roll() method. The .roll() method rolls each element along a given axis, with values rolling past the last position are sent back to the first position. We can use this to define the change between each iteration. It helped me to split it into two changes, one along the x-axis and the other along the y-axis. Looking at the x-axis, for each updated element we need to add the element directly to the left and right of it, which we can accomplish by using an np.roll() both left and right. We do this by setting the axis equal to zero, as that corresponds to the x-axis, and first setting the shift to one, as that moves us one element to the right. Next, we call np.roll() again and set the shift to -1, representing a shift to the left. Now we can do the same thing for the y-axis, the only difference being we are setting the axis in our roll functions equal to 1 as that corresponds to the y-axis. Now we have taken care of almost all of the changes found in our discrete time equation, but we are missing the 4u term. To account for this, I simply subtracted 2u from each equation to combine for a total of (-4u), however you could do this at a later stage if desired. Now that we have determined what the change is to be between timepoints, we multiply by epsilon and add the u passed into the function as we did in our previous advance_time_matvecmul() function, setting it equal to a matrix named finU. We may be tempted to stop here, however we are missing a key factor: the matrix we have created remains a (N+2)x(N+2) matrix, when we want to return a matrix of size N x N. Luckily, we have set it up so that the outer ring of values are to be thrown away, as we initially introduced them within the function. To accomplish this, we set our return matrix, u_new, equal to the center portion of finU using the indices[1:-1,1:-1] before returning this new matrix.</p>
+<pre><code>To check that this function is running correctly, we can repeat the same debugging process we have done twice now in jax_heat_map.ipynb: create a new empty list, and run our loops. However this time, we will call the new function advance_time_numpy() and only pass the parameters u and epsilon as this function only takes these two parameters. You should notice another incresase in speed as mine took _____ ms to run the code. Again, the output should appear very similar if not identical to the outputs from our previous attempts using the other functions. Note, the function advance_time_numpy() is not to be jitted as advance_time_matvecmul() was. 
+
+Finally, we have come to our last function, advance_time_jax(). In this function, we wish to implement a similar method to advance_time_numpy(), however as we plan to jit this function, we have to be careful in how we do so. Much of the set up is the same as the numpy function as we will use u.shape() to get our value for N and will then create a new matrix of size (N+2)x(N+2) full of zeros called newU. We again wish to fill the middle of this matrix with the matrix that we were passed in, however we cannot change individual indices due to restrictions for jax, therefore we will be creating lots of new matrices. Therefore, instead of directly reassigning values for the central section of our matrix newU, we will use the .add function to add u to just our central section by calling the function .at[1:-1,1:-1], effectively placing u in the middle as we are simply adding u to a bunch of zeros. After assigning this altered matrix back to newU, we can do the same process as we did in numpy to define our changes in the x and y directions, however instead of calling np.roll(), we will be calling jnp.roll() to call the jax version of numpy. We can then apply the changes, assinging it to a new matrix finU, in the same way as we did in numpy as finU = newU + epsilon*(u_xx+u_yy). Now, we can select just the center values, setting it equal to the new matrix we will be returning, u_new, and we are finished with our final method. 
+
+To check that we have created another functioning method, we repeat the same debugging process as we did for advance_time_numpy(), except we create a different list and call the advance_time_jax() function while making sure to jit the function as we call it. This function should be very fast, even faster than our previous function, as mine took _____ ms to run the code. If the output appears identical to our previous iterations then we have completed all of our methods successfully.</code></pre>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      return note.innerHTML;
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
