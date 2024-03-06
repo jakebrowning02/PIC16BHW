@@ -88,14 +88,21 @@
     "href": "posts/HW4/index.html",
     "title": "HW 4: Heat diffusion with Jax",
     "section": "",
-    "text": "import jax\nimport numpy as np\nimport time\nfrom matplotlib import pyplot as plt\nfrom jax.experimental import sparse\nfrom jax import jit\nimport jax.numpy as jnp\n#importing the equations from our heat_equations file\n%run heat_equations.ipynb\n#setting our values to be used in this example\nN = 101\nepsilon = 0.2\n\nThis block contains the necessary imports needed to run our project. Additionally, you can see we are calling for heat_equations.ipynb to run. This will allow us to access the functions we define within that file so that we can test their functionality within this notebook. Note that in this blog post, all functions have been placed within the same notebook to make the post easier to understand. Finally, we define both N and epsilon to values that we will be using throughout this example. Note that epsilon is used in updating our timestep and N will represent the dimensions of our grid state."
+    "text": "Today we will be simulating two dimensional heat diffusion using tools such as numpy and jax. The goal of this project is to get us familiar with some jax functions, as well as the benefits and drawbacks of using jax. Let us begin!"
+  },
+  {
+    "objectID": "posts/HW4/index.html#introduction",
+    "href": "posts/HW4/index.html#introduction",
+    "title": "HW 4: Heat diffusion with Jax",
+    "section": "",
+    "text": "Today we will be simulating two dimensional heat diffusion using tools such as numpy and jax. The goal of this project is to get us familiar with some jax functions, as well as the benefits and drawbacks of using jax. Let us begin!"
   },
   {
     "objectID": "posts/HW4/index.html#imports",
     "href": "posts/HW4/index.html#imports",
     "title": "HW 4: Heat diffusion with Jax",
-    "section": "",
-    "text": "import jax\nimport numpy as np\nimport time\nfrom matplotlib import pyplot as plt\nfrom jax.experimental import sparse\nfrom jax import jit\nimport jax.numpy as jnp\n#importing the equations from our heat_equations file\n%run heat_equations.ipynb\n#setting our values to be used in this example\nN = 101\nepsilon = 0.2\n\nThis block contains the necessary imports needed to run our project. Additionally, you can see we are calling for heat_equations.ipynb to run. This will allow us to access the functions we define within that file so that we can test their functionality within this notebook. Note that in this blog post, all functions have been placed within the same notebook to make the post easier to understand. Finally, we define both N and epsilon to values that we will be using throughout this example. Note that epsilon is used in updating our timestep and N will represent the dimensions of our grid state."
+    "section": "Imports",
+    "text": "Imports\n\nimport jax\nimport numpy as np\nimport time\nfrom matplotlib import pyplot as plt\nfrom jax.experimental import sparse\nfrom jax import jit\nimport jax.numpy as jnp\n#importing the equations from our heat_equations file\n%run heat_equations.ipynb\n#setting our values to be used in this example\nN = 101\nepsilon = 0.2\n\nThis block contains the necessary imports needed to run our project. Additionally, you can see we are calling for heat_equations.ipynb to run. This will allow us to access the functions we define within that file so that we can test their functionality within this notebook. Note that in this blog post, all functions have been placed within the same notebook to make the post easier to understand. Finally, we define both N and epsilon to values that we will be using throughout this example. Note that epsilon is used in updating our timestep and N will represent the dimensions of our grid state."
   },
   {
     "objectID": "posts/HW4/index.html#getting-the-matrix-a",
